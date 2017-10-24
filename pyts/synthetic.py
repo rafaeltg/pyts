@@ -11,11 +11,14 @@ def mackey_glass(n=1000, tau=17, delta_t=10, seed=None):
 
     """
     Generate the Mackey-Glass time-series.
+
     :param n: length of the time-series in timesteps. Default is 1000.
     :param tau: delay of the MG - system. Commonly used values are tau=17 (mild
           chaos) and tau=30 (moderate chaos). Default is 17.
     :param delta_t: time step size
     :param seed: to seed the random generator, can be used to generate the same timeseries at each invocation.
+
+    :return
     """
 
     history_len = tau * delta_t
@@ -44,8 +47,16 @@ def mackey_glass(n=1000, tau=17, delta_t=10, seed=None):
 def lorenz(n=1000, sigma=10., rho=28., beta=8. / 3., dt=0.01):
 
     """
-    This function generates a Lorenz time series of length sample_len,
+    Generates a Lorenz time-series of length n,
     with standard parameters sigma, rho and beta.
+
+    :param n:
+    :param sigma:
+    :param rho:
+    :param beta:
+    :param dt:
+
+    :return
     """
 
     def f(state, t, sigma, rho, beta):

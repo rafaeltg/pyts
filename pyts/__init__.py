@@ -5,6 +5,7 @@
 # Functions to work with Time Series
 from __future__ import absolute_import
 
+from .files import *
 from .finance import *
 from .synthetic import *
 from .stats import *

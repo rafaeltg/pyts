@@ -5,7 +5,7 @@ from statsmodels.tsa.stattools import adfuller
 from statsmodels.tsa.seasonal import seasonal_decompose
 
 
-__all__ = ['acf', 'pacf', 'test_stationarity', 'decompose']
+__all__ = ['acf', 'pacf', 'test_stationarity', 'decompose', 'correlated_lags']
 
 
 def acf(ts, nlags=20, plot=False, ax=None):
@@ -143,3 +143,32 @@ def decompose(ts, plot=False, axes=None):
         return trend, seasonal, residual, axes
 
     return trend, seasonal, residual
+
+
+def correlated_lags(ts, corr_lags=-1, max_lags=100):
+
+    """
+    Return the index of the correlated lags.
+
+    :param ts: time series
+    :param corr_lags: number of correlated lags to return. If -1, return all
+    :param max_lags: number of lags to calculate the acf function
+    """
+
+    assert max_lags > corr_lags, "'max_lags' must be greater than 'corr_lags'"
+
+    acfs, conf = acf(ts, max_lags)
+    acfs = np.asarray(acfs)
+
+    most_corr = [v > conf for v in acfs]
+
+    idx = None
+    if sum(most_corr) > 0:
+        idx = np.argsort(acfs[most_corr])
+
+        if corr_lags > 0:
+            idx = idx[-(min(corr_lags, len(idx))+1):-1]
+
+        idx = sorted(idx)
+
+    return idx
