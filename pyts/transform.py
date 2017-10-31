@@ -17,8 +17,11 @@ def create_dataset(ts, look_back=1, time_ahead=1):
 
     assert len(ts) > look_back+time_ahead, 'No enough points in time series!'
 
-    if isinstance(ts, pd.DataFrame):
+    if isinstance(ts, pd.DataFrame) or isinstance(ts, pd.Series):
         ts = ts.as_matrix()
+
+    if len(ts.shape) == 1:
+        ts = ts.reshape(-1, 1)
 
     y_starts = range(look_back, len(ts)+1-time_ahead, 1)
     y_idxs = [range(i, i+time_ahead) for i in y_starts]
