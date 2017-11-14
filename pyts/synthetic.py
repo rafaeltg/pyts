@@ -13,8 +13,7 @@ def mackey_glass(n=1000, tau=17, delta_t=10, seed=None):
     Generate the Mackey-Glass time-series.
 
     :param n: length of the time-series in timesteps. Default is 1000.
-    :param tau: delay of the MG - system. Commonly used values are tau=17 (mild
-          chaos) and tau=30 (moderate chaos). Default is 17.
+    :param tau: delay of the MG - system. Default is 17.
     :param delta_t: time step size
     :param seed: to seed the random generator, can be used to generate the same timeseries at each invocation.
 
@@ -44,18 +43,23 @@ def mackey_glass(n=1000, tau=17, delta_t=10, seed=None):
     return pd.DataFrame({'Value': np.squeeze(inp)})
 
 
-def lorenz(n=1000, sigma=10., rho=28., beta=8. / 3., dt=0.01):
+def lorenz(n=1000, sigma=10., rho=28., beta=8. / 3., dt=0.01, state0=[-13, -14, 47]):
 
     """
     Generates a Lorenz time-series of length n,
     with standard parameters sigma, rho and beta.
 
-    :param n:
-    :param sigma:
-    :param rho:
-    :param beta:
-    :param dt:
+    Reference:
+    Strogatz, S.: Nonlinear dynamics and chaos: with applications to physics, biology, chemistry and engineering
+    (Studies in Nonlinearity)
 
+    :param n:
+    :param sigma: The sigma parameter. Default: 10.
+    :param rho: The rho parameter. Default: 28.
+    :param beta: The beta parameter. Default: 8/3.
+    :param dt:
+    :param state0: A 3-dimensional numeric vector indicating the starting point for the time series.
+                   Default: c(0, 0, 0).
     :return
     """
 
@@ -67,8 +71,6 @@ def lorenz(n=1000, sigma=10., rho=28., beta=8. / 3., dt=0.01):
         dz_dt = (x * y) - (beta * z)
         return [dx_dt, dy_dt, dz_dt]
 
-    # Initial conditions taken from 'Chaos and Time Series Analysis', J. Sprott
-    state0 = [0, -0.01, 9] #[-3.16, -5.31, 13.31]
     t = np.linspace(0.0, n * dt, n)
     states = odeint(f, state0, t, args=(sigma, rho, beta))
     x, y, z = states.T
