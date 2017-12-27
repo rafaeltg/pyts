@@ -145,7 +145,7 @@ def decompose(ts, plot=False, axes=None):
     return trend, seasonal, residual
 
 
-def correlated_lags(ts, corr_lags=-1, max_lags=100):
+def correlated_lags(ts, corr_lags=1, max_lags=100):
 
     """
     Return the index of the correlated lags.
@@ -160,15 +160,15 @@ def correlated_lags(ts, corr_lags=-1, max_lags=100):
     acfs, conf = acf(ts, max_lags)
     acfs = np.asarray(acfs)
 
-    most_corr = [v > conf for v in acfs]
+    idx = np.argsort(acfs)
 
-    idx = None
-    if sum(most_corr) > 0:
-        idx = np.argsort(acfs[most_corr])
+    most_corr = []
 
-        if corr_lags > 0:
-            idx = idx[-(min(corr_lags, len(idx))+1):-1]
+    for i in idx[-2::-1]:
+        if acfs[i] > conf:
+            most_corr.append(i)
 
-        idx = sorted(idx)
+        if len(most_corr) == corr_lags:
+            break
 
-    return idx
+    return sorted(most_corr)
